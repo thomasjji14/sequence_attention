@@ -12,8 +12,7 @@ def split_sample(sample_id, label, in_dir, out_dir):
     '''
     
     file_dir = '{}/{}/{}'.format(out_dir, label, sample_id)
-    # filename = '{}/{}.fasta'.format(in_dir, sample_id)
-    filename = '{}/{}_{}.fa'.format(in_dir, sample_id, label)
+    filename = '{}/{}.fna'.format(in_dir, sample_id)
     
     if not os.path.exists(file_dir):
         os.makedirs(file_dir)
@@ -24,17 +23,16 @@ def split_sample(sample_id, label, in_dir, out_dir):
     for line in f_sample:
         if line[0] == '>':
             if len(read) != 0:
-                with open('{}/{}/{}/{}.fasta'.format(out_dir, label, sample_id, header), 'w+') as f_read:
+                with open('{}/{}/{}/{}.fna'.format(out_dir, label, sample_id, header), 'w+') as f_read:
                     f_read.write(read)
                     meta_data_read_list.append(header)
                 read = ''
             read += line
-            header = line[1:].strip().split(' ')[1]
-    #         header = line[1:].strip()
+            header = line[1:].strip()
         else:
             read += line
     if len(read) != 0:
-        with open('{}/{}/{}/{}.fasta'.format(out_dir, label, sample_id, header), 'w+') as f_read:
+        with open('{}/{}/{}/{}.fna'.format(out_dir, label, sample_id, header), 'w+') as f_read:
             f_read.write(read)
             meta_data_read_list.append(header)
     f_sample.close()
@@ -69,10 +67,7 @@ def preprocess_data(opt):
         os.makedirs(opt.out_dir)
     
     meta_data = pd.read_csv('{}/meta_data.csv'.format(opt.in_dir))
-    #### ===== To be removed ======= ####
-    meta_data = meta_data[:5]
-    #### ===== To be removed ======= ####
-
+    
     label_list = sorted(meta_data['label'].unique())
     
     label_dict = {}
@@ -93,8 +88,7 @@ def preprocess_data(opt):
         if idx % STEP == 0:
             logging.info('Processing raw data: {:.1f}% completed.'.format(10 * idx / STEP))
         sample_id, label = meta_data.iloc[idx]['sample_id'], meta_data.iloc[idx]['label']
-    #     filename = '{}/{}_{}.fa'.format(in_dir, sample_id, label)
-    #     print(filename)
+
         read_meta_data[sample_id] = split_sample(sample_id, label, opt.in_dir, opt.out_dir)
     
     min_num_sample = min([meta_data[meta_data['label']==label].shape[0] for label in label_list])
@@ -114,10 +108,10 @@ def preprocess_data(opt):
     
     train_list = []
     for sample_id in partition['train']:
-        train_list.extend(['{}/{}/{}/{}.fasta'.format(opt.out_dir, sample_to_label[sample_id], sample_id, read_id) for read_id in read_meta_data[sample_id]])
+        train_list.extend(['{}/{}/{}/{}.fna'.format(opt.out_dir, sample_to_label[sample_id], sample_id, read_id) for read_id in read_meta_data[sample_id]])
     test_list = []
     for sample_id in partition['test']:
-        test_list.extend(['{}/{}/{}/{}.fasta'.format(opt.out_dir, sample_to_label[sample_id], sample_id, read_id) for read_id in read_meta_data[sample_id]])
+        test_list.extend(['{}/{}/{}/{}.fna'.format(opt.out_dir, sample_to_label[sample_id], sample_id, read_id) for read_id in read_meta_data[sample_id]])
     
     read_partition = {'train': train_list, 'test': test_list}
     pickle.dump(read_partition, open('{}/train_test_split.pkl'.format(opt.out_dir), 'wb'))    
