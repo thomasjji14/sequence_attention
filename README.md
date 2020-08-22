@@ -37,11 +37,6 @@ Examples of the required files is shown below:
 | SAMPLE_4  | skin   |
 | ...       | ...    |
 
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
 2. SAMPLE_1.fna
 ```
 >SAMPLE_1_1
