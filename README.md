@@ -28,6 +28,7 @@ raw_data
 ```
 Examples of the required files is shown below:
 1. *meta_data.csv* example:
+
 | sample_id | label  |
 |-----------|--------|
 | SAMPLE_1  | feces  |
@@ -35,6 +36,12 @@ Examples of the required files is shown below:
 | SAMPLE_3  | feces  |
 | SAMPLE_4  | skin   |
 | ...       | ...    |
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
 2. SAMPLE_1.fna
 ```
 >SAMPLE_1_1
