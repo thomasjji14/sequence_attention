@@ -100,14 +100,14 @@ seq_att_model.evaluate_generator(testing_generator, n_workers=opt.n_workers)
 
 ```
 #### Model interpretation and sequence visualization
-Prepare the X_visual (N by SEQ_LEN by NUMBASE) in *numpy array* and a list of taxonomic labels of those sequences (e.g., genus level labels). We also need a list of phenotypic labels of those sequences. Then run the following commands to plot embedding and attention weights visualization figures.
+Prepare the X_visual (N by SEQ_LEN by NUMBASE) in *numpy array*, y_visual (phenotypic labels in integers) in *numpy array* and a list of taxonomic labels of those sequences (e.g., genus level labels). We also need a list of phenotypic labels of those sequences. Then run the following commands to plot embedding and attention weights visualization figures.
 ```python
 prediction, attention_weights, sequence_embedding = seq_att_model.extract_weigths(X_visual)
 from sequence_attention import SeqVisualUnit
-idx_to_label = idx2label
+idx_to_label = {label_dict[label]: label for label in label_dict}
 seq_visual_unit = SeqVisualUnit(X_visual, y_visual, idx_to_label, taxa_label_list, 
                                 prediction, attention_weights, sequence_embedding, 'Figures')
 seq_visual_unit.plot_embedding()
 seq_visual_unit.plot_attention('Prevotella')
 ```
-In the code snippet above, we also need *y_visual* (phenotypic labels in integers), *idx_to_label* (integer to phenotypic labels dictionary) from the previous steps.
+In the code snippet above, we also need , *label_dict* (phenotypic labels to integer dictionary saved in `$opt.out_dir/label_dict.pkl` by the previous steps.

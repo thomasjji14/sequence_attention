@@ -4,14 +4,14 @@ class Config:
     Model configuration:
     '''
     ## ======= parameters required ======= ##
-    in_dir = '/data/zzhao/ATT_PAPER/AG/data' # directory of raw data
+    in_dir = 'raw_data' # directory of raw data
     out_dir = 'processed_data' # directory of processed data
     
     num_train_samples_per_cls = 10 # number of training sample per class
 
     SEQLEN = 100 # sequence length
     BASENUM = 4 # dimension of input sequence (e.g., there are 4 major bases for DNA sequence input, therefore BASENUM is 4)
-    Ty = 3 # number of target classes (Ty >= 2)
+    Ty = 5 # number of target classes (Ty >= 2)
     save_model_path = 'saved_model/'  # path to the saved model directory
     
     n_workers = 1
