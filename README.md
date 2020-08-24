@@ -64,3 +64,50 @@ processed_data
 |   │   ...
 |   ...
 ```
+## Tutorial
+#### Data Preprocessing
+First, please review the settings in *config.py* file especially the data path. Then, run the following to preprocessing the data.
+```python
+import keras
+import numpy as np
+from sequence_attention import SeqAttModel, preprocess_data, DataGenerator, DataGeneratorUnlabeled
+from config import Config
+
+opt = Config()
+
+preprocess_data(opt)
+```
+#### Model Initialization
+Once the data is preprocessed, run the following to load metadata, initialize the model and the data generator.
+```python
+import pickle
+label_dict = pickle.load(open('{}/label_dict.pkl'.format(opt.out_dir), 'rb')) 
+sample_to_label, read_meta_data = pickle.load(open('{}/meta_data.pkl'.format(opt.out_dir), 'rb'))
+partition = pickle.load(open('{}/train_test_split.pkl'.format(opt.out_dir), 'rb')) 
+seq_att_model = SeqAttModel(opt)
+
+training_generator = DataGenerator(partition['train'], sample_to_label, label_dict, 
+                                   dim=(opt.SEQLEN,opt.BASENUM), batch_size=opt.batch_size, shuffle=opt.shuffle)
+testing_generator = DataGenerator(partition['test'], sample_to_label, label_dict, 
+                                   dim=(opt.SEQLEN,opt.BASENUM), batch_size=opt.batch_size, shuffle=opt.shuffle)
+
+```
+#### Model training and evaluation
+Once the model is trained, you can evaluate the performance of the model using the training data and testing data. The following command will return accuracy.
+```python
+seq_att_model.train_generator(training_generator, n_workers=opt.n_workers)
+seq_att_model.evaluate_generator(testing_generator, n_workers=opt.n_workers)
+
+```
+#### Model interpretation and sequence visualization
+Prepare the X_visual (N by SEQ_LEN by NUMBASE) in *numpy array* and a list of taxonomic labels of those sequences (e.g., genus level labels). We also need a list of phenotypic labels of those sequences. Then run the following commands to plot embedding and attention weights visualization figures.
+```python
+prediction, attention_weights, sequence_embedding = seq_att_model.extract_weigths(X_visual)
+from sequence_attention import SeqVisualUnit
+idx_to_label = idx2label
+seq_visual_unit = SeqVisualUnit(X_visual, y_visual, idx_to_label, taxa_label_list, 
+                                prediction, attention_weights, sequence_embedding, 'Figures')
+seq_visual_unit.plot_embedding()
+seq_visual_unit.plot_attention('Prevotella')
+```
+In the code snippet above, we also need *y_visual* (phenotypic labels in integers), *idx_to_label* (integer to phenotypic labels dictionary) from the previous steps.

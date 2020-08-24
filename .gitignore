@@ -13,4 +13,4 @@ build/
 *.gz
 *.hdf5
 *.npy
-
+*.fna
