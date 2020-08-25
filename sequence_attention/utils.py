@@ -66,7 +66,7 @@ def preprocess_data(opt):
     if not os.path.exists(opt.out_dir):
         os.makedirs(opt.out_dir)
     
-    meta_data = pd.read_csv('{}/meta_data.csv'.format(opt.in_dir))
+    meta_data = pd.read_csv('{}/meta_data.csv'.format(opt.in_dir), dtype='str')
     
     label_list = sorted(meta_data['label'].unique())
     
