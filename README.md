@@ -66,7 +66,7 @@ processed_data
 ```
 ## Tutorial
 #### Data Preprocessing
-First, please review the settings in *config.py* file especially the data path. Then, run the following to preprocessing the data.
+First, please review the settings in *config.py* file especially the data path. Then, run the following to preprocessing the data. There are two ways to prepare the data: 1). split a fna file into files that contain one read per file. Then the generator can quickly load reads and construct a batch of data. However, the splitting data part can be slow; 2). convert a fna file to a dictionary. Then the generator can load a whole dictionary file (saved as pickle file) and look up for a read and construct a batch of data. It is fast in data preparation step. 
 ```python
 import keras
 import numpy as np
@@ -74,21 +74,28 @@ from sequence_attention import SeqAttModel, preprocess_data, DataGenerator, Data
 from config import Config
 
 opt = Config()
-
+###===== method 1 =====###
 preprocess_data(opt)
+###===== method 2 =====###
+preprocess_data_pickle(opt)
 ```
 #### Model Initialization
-Once the data is preprocessed, run the following to load metadata, initialize the model and the data generator.
+Once the data is preprocessed, run the following to load metadata, initialize the model and the data generator. 
 ```python
 import pickle
 label_dict = pickle.load(open('{}/label_dict.pkl'.format(opt.out_dir), 'rb')) 
 sample_to_label, read_meta_data = pickle.load(open('{}/meta_data.pkl'.format(opt.out_dir), 'rb'))
 partition = pickle.load(open('{}/train_test_split.pkl'.format(opt.out_dir), 'rb')) 
 seq_att_model = SeqAttModel(opt)
-
+###===== method 1 =====###
 training_generator = DataGenerator(partition['train'], sample_to_label, label_dict, 
                                    dim=(opt.SEQLEN,opt.BASENUM), batch_size=opt.batch_size, shuffle=opt.shuffle)
 testing_generator = DataGenerator(partition['test'], sample_to_label, label_dict, 
+                                   dim=(opt.SEQLEN,opt.BASENUM), batch_size=opt.batch_size, shuffle=opt.shuffle)
+###===== method 2 =====###
+training_generator = DataGeneratorPickle(partition['train'], sample_to_label, label_dict, 
+                                   dim=(opt.SEQLEN,opt.BASENUM), batch_size=opt.batch_size, shuffle=opt.shuffle)
+testing_generator = DataGeneratorPickle(partition['test'], sample_to_label, label_dict, 
                                    dim=(opt.SEQLEN,opt.BASENUM), batch_size=opt.batch_size, shuffle=opt.shuffle)
 
 ```
