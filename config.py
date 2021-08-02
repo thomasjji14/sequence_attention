@@ -11,7 +11,7 @@ class Config:
 
     SEQLEN = 100 # sequence length
     BASENUM = 4 # dimension of input sequence (e.g., there are 4 major bases for DNA sequence input, therefore BASENUM is 4)
-    Ty = 5 # number of target classes (Ty >= 2)
+    Ty = 2 # number of target classes (Ty >= 2)
     save_model_path = 'saved_model/'  # path to the saved model directory
     
     n_workers = 1
