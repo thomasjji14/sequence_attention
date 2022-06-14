@@ -9,7 +9,7 @@ from keras.optimizers import Adam
 
 ## ===== to be removed ===== ##
 np.random.seed(1)
-tf.set_random_seed(2)
+tf.random.set_seed(2)
 ## ===== to be removed ===== ##
 
 def conv_net_block(X, n_cnn_filters=256, cnn_window=9, block_name='convblock_0'):
