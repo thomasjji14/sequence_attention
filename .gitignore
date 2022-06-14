@@ -2,6 +2,8 @@
 __pycache__/
 dist/
 build/
+raw_data/
+processed_data/
 *.pyc
 *.egg-info
 *.fasta
