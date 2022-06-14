@@ -14,3 +14,4 @@ build/
 *.hdf5
 *.npy
 *.fna
+*.ipynb
