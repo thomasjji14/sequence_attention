@@ -122,14 +122,14 @@ def sequence_attention_model(opt):
         out = Dense(1, activation='sigmoid', name='final_dense')(r_emb)
         model = Model(inputs = X, outputs = out)
         # Compile model
-        model.compile(optimizer=Adam(lr = opt.opt_lr, beta_1=0.9, beta_2=0.999, decay=opt.opt_decay),
+        model.compile(optimizer=Adam(learning_rate = opt.opt_lr, beta_1=0.9, beta_2=0.999, decay=opt.opt_decay),
                         metrics=['accuracy'],
                         loss='binary_crossentropy')
     else:
         out = Dense(opt.Ty, activation='softmax', name='final_dense')(r_emb)
         model = Model(inputs = X, outputs = out)
         # Compile model
-        model.compile(optimizer=Adam(lr = opt.opt_lr, beta_1=0.9, beta_2=0.999, decay=opt.opt_decay),
+        model.compile(optimizer=Adam(learning_rate = opt.opt_lr, beta_1=0.9, beta_2=0.999, decay=opt.opt_decay),
                         metrics=['accuracy'],
                         loss='categorical_crossentropy')
     return model
