@@ -18,7 +18,7 @@ class Config:
     ## ======= parameters required ======= ##
     
     ## ======= parameters optional ======= ##
-    device = "gpu" if tf.test.is_gpu_available() else "cpu"
+    device = "gpu" if len(tf.config.list_physical_devices("GPU")) != 0 else "cpu"
     
     if_cnn = 1 # if_cnn = {0: no cnn, 1: cnn+resnet}
     n_cnn_layer = 1 # number of cnn/resnet blocks                
