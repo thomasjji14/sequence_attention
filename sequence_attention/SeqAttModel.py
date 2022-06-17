@@ -37,12 +37,12 @@ class SeqAttModel:
         Model training with a generator
         '''
         logging.info('Training started:')
-        self.history = self.model.fit_generator(generator=training_generator,
-                                                use_multiprocessing=True,
-                                                workers=n_workers, verbose=True)
-        eval_loss, eval_acc = self.model.evaluate_generator(generator=training_generator,
-                                                            use_multiprocessing=True,
-                                                            workers=n_workers)
+        self.history = self.model.fit(training_generator,
+                                      use_multiprocessing=True,
+                                      workers=n_workers, verbose=True)
+        eval_loss, eval_acc = self.model.evaluate(training_generator,
+                                                  use_multiprocessing=True,
+                                                  workers=n_workers)
         logging.info('Evaluation completed: evaluation accuracy is {:.4f}.'.format(eval_acc))
         
     def predict(self, X):
@@ -79,10 +79,11 @@ class SeqAttModel:
         Model evaluation with a generator
         '''
         logging.info('Evaluation started:')
-        eval_loss, eval_acc = self.model.evaluate_generator(generator=test_generator,
-                                                            use_multiprocessing=True,
-                                                            workers=n_workers)
+        eval_loss, eval_acc = self.model.evaluate(test_generator,
+                                use_multiprocessing=True,
+                                workers=n_workers)
         logging.info('Evaluation completed: evaluation accuracy is {:.4f}.'.format(eval_acc))
+        # return p
         return eval_acc
     
     def save(self, name):
