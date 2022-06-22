@@ -3,6 +3,10 @@ import random
 import pandas as pd
 import pickle
 import logging
+from sequence_attention.DataGenerator import base2vec
+
+# added
+import numpy as np
 
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
@@ -33,6 +37,43 @@ def fna_to_dict(sample_id, label, in_dir, out_dir):
     f_sample.close()
     pickle.dump(read_dict, open(out_name, 'wb'))
     return meta_data_read_list
+
+def fna_to_dict2(path, opt):
+    '''
+    convert fna file to dictionary
+    '''
+    def seq_mapper(seq):
+        seq_coded = np.zeros((opt.SEQLEN, opt.BASENUM))
+        for i in range(len(seq)):
+            if seq[i] in base2vec:
+                seq_coded[i,:] = base2vec[seq[i]]
+            else:
+                seq_coded[i,:] = base2vec['N']
+        return seq_coded
+    
+    filename = path
+    
+    meta_data_read_list = []
+    read = ''
+    f_sample = open(filename)
+    read_dict = {}
+    for line in f_sample:
+        if line[0] == '>':
+            if len(read) != 0:
+                read_dict[header] = read
+                meta_data_read_list.append(header)
+                read = ''
+            header = line[1:].strip()
+        else:
+            read += line.strip()
+    if len(read) != 0:
+        read_dict[header] = read
+        meta_data_read_list.append(header)
+    f_sample.close()
+
+    one_hot_dict = {k: seq_mapper(v) for k, v in read_dict.items()}
+
+    return one_hot_dict
 
 def split_sample(sample_id, label, in_dir, out_dir):
     '''
