@@ -51,7 +51,7 @@ def fna_to_dict2(path, opt):
                 seq_coded[i,:] = base2vec['N']
         return seq_coded
     
-    filename = path
+    filename = path + ".fna"
     
     meta_data_read_list = []
     read = ''
